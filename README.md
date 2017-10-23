@@ -33,16 +33,11 @@ https://www.jetbrains.com/pycharm/
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": "iot:Connect",
+      "Action": [
+        "iot:Connect",
+        "iot:Publish"
+      ],
       "Resource": "*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": "iot:Publish",
-      "Resource": [
-        "arn:aws:iot:eu-west-1:579970091892:topic/temperatureMetric",
-        "arn:aws:iot:eu-west-1:579970091892:topic/temperatureMetric/*"
-      ]
     }
   ]
 }
