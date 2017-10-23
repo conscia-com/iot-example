@@ -1,0 +1,5 @@
+# Distribution / packaging
+aws-iot-device-sdk-python/
+python3env/
+*.crt
+*.key

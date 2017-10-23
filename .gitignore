@@ -1,0 +1,21 @@
+#
+*.iml
+.idea
+*.o
+*.so
+
+# Extra lambda requirements
+*-lambda/.requirements/
+*-lambda/node_modules/
+
+# Terraform files
+*.tfstate
+*.tfstate.backup
+ec2_amazon-ebs.pem
+.terraform
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+*.retry
+.DS_Store
+
