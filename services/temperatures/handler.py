@@ -7,10 +7,12 @@ def temperature(event, context):
 
     message = event
 
-    print(context)
+#   ts = datetime.datetime.strptime(str(message['Timestamp']), '%Y-%m-%dT%H:%M:%S')
+    ts = datetime.datetime.utcnow()
 
-    sensorid = str(message['sensorid'])
-    temperature = float(message['temperature'])
+    sensorid = str(message['Device ID'])
+    temperature = float(message['Temperatur'])
+    co2sensor = float(message['Co2Sensor'])
 
     response = client.put_metric_data(
         Namespace='Temperatures',
@@ -23,8 +25,21 @@ def temperature(event, context):
                         'Value': sensorid
                     }
                 ],
-                'Timestamp': datetime.datetime.utcnow(),
+                'Timestamp': ts,
                 'Value': float(temperature),
+                'Unit': 'None',
+                'StorageResolution': 1
+            },
+            {
+                'MetricName': 'Co2',
+                'Dimensions': [
+                    {
+                        'Name': 'Sensor',
+                        'Value': sensorid
+                    }
+                ],
+                'Timestamp': ts,
+                'Value': float(co2sensor),
                 'Unit': 'None',
                 'StorageResolution': 1
             },
@@ -33,7 +48,7 @@ def temperature(event, context):
 
 
     return {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
+        "message": "Executed successfully!",
         "event": event,
         "response": response
     }

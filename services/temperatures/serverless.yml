@@ -27,7 +27,7 @@ functions:
     handler: handler.temperature
     events:
       - iot:
-          sql: "SELECT * FROM 'temperatureMetric/#'"
+          sql: "SELECT * FROM '/temperatureMetric/#'"
 
 # you can add CloudFormation resource templates here
 #resources:

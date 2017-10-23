@@ -7,10 +7,12 @@
 
 ### Deploy and run function
 
+```
 serverless create --template aws-python3 --path temperatures
 serverless deploy
-serverless deploy function --function temperature
-serverless invoke -f hello -l
+serverless deploy function --function handleTemperature
+serverless invoke -f temperature -l
+```
 
 ### Links and tips
 
