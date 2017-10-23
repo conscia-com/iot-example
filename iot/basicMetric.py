@@ -1,8 +1,11 @@
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
+import subprocess
+import re
 import logging
 import time
 import argparse
 import json
+import datetime
 
 # Custom MQTT message callback
 def customCallback(client, userdata, message):
@@ -11,6 +14,12 @@ def customCallback(client, userdata, message):
     print("from topic: ")
     print(message.topic)
     print("--------------\n\n")
+
+
+def get_first_line_from_cmd(cmdline_arr):
+    result = subprocess.run(cmdline_arr, stdout=subprocess.PIPE)
+    firstline = result.stdout.decode('utf-8').split()[0]
+    return str(firstline)
 
 
 # Read in command-line parameters
@@ -23,7 +32,7 @@ parser.add_argument("-w", "--websocket", action="store_true", dest="useWebsocket
                     help="Use MQTT over WebSocket")
 parser.add_argument("-id", "--clientId", action="store", dest="clientId", default="basicMetric",
                     help="Targeted client id")
-parser.add_argument("-t", "--topic", action="store", dest="topic", default="temperatureMetric", help="Targeted topic")
+parser.add_argument("-t", "--topic", action="store", dest="topic", default="/temperatureMetric", help="Targeted topic")
 
 args = parser.parse_args()
 host = args.host
@@ -33,6 +42,11 @@ privateKeyPath = args.privateKeyPath
 useWebsocket = args.useWebsocket
 clientId = args.clientId
 topic = args.topic
+
+#
+# Make the sensorname slightly prettier
+#
+sensorname = re.sub('.local$', '', get_first_line_from_cmd(cmdline_arr=['hostname'])).replace(' ', '')
 
 if args.useWebsocket and args.certificatePath and args.privateKeyPath:
     parser.error("X.509 cert authentication and WebSocket are mutual exclusive. Please pick one.")
@@ -77,8 +91,10 @@ time.sleep(2)
 # Publish to the same topic in a loop forever
 loopCount = 0
 while True:
-    print("Publishing to %s - loop count %d\n" % (topic, loopCount))
-    temp_reading = { 'sensorid': 'fake', 'temperature': 37.0, 'reading': loopCount }
+    ts = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S")
+    temperature = get_first_line_from_cmd(cmdline_arr=['istats', 'cpu', 'temp', '--value-only'])
+    temp_reading = {'Timestamp': ts, 'Device ID': sensorname, 'Temperatur': float(temperature), 'Co2Sensor': 0.0}
+    print("Publishing to %s - loop count %d - temperature: %s\n" % (topic, loopCount, temperature))
     myAWSIoTMQTTClient.publish(topic, json.dumps(temp_reading), 1)
     loopCount += 1
-    time.sleep(2)
+    time.sleep(5)

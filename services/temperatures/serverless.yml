@@ -27,16 +27,6 @@ functions:
     handler: handler.temperature
     events:
       - iot:
-          sql: "SELECT * FROM '/temperatureMetric/#'"
-
-# you can add CloudFormation resource templates here
-#resources:
-#  Resources:
-#    NewResource:
-#      Type: AWS::S3::Bucket
-#      Properties:
-#        BucketName: my-new-bucket
-#  Outputs:
-#     NewOutput:
-#       Description: "Description for the output"
-#       Value: "Some output value"
+          sql: "SELECT * FROM 'temperatureMetric/#'"
+      - iot:
+          sql: "SELECT * FROM 'temperatureMetric'"

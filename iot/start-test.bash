@@ -25,6 +25,6 @@ if [ ! -f ./root-CA.crt ]; then
 fi
 
 # run sample app
-python3 basicMetric.py -e $ENDPOINT -r root-CA.crt -c $CERT_ID-certificate.pem.crt -k $CERT_ID-private.pem.key -t temperatureMetric/fake
+python3 basicMetric.py -e $ENDPOINT -r root-CA.crt -c $CERT_ID-certificate.pem.crt -k $CERT_ID-private.pem.key -t temperatureMetric
 
 exit 0
